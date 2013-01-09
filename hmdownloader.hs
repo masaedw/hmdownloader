@@ -32,7 +32,7 @@ downloadFiles url = do
     then putStrLn $ "mkdir " ++ name
     else return ()
   let images = map (base ++) $ filter ("img/" `isPrefixOf`) hrefs
-      movies = filter (".mp4" `isSuffixOf`) hrefs
+      movies = filter (=~ "(mp4|zip)$") hrefs
   mapM_ (uncurry download) $ map (\x -> (x, imageFilename name x)) $ images ++ movies
 
 download :: Url -> FilePath -> IO ()
