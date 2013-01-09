@@ -1,0 +1,6 @@
+# intermediate files
+*.hi
+*.o
+
+# binary
+hmdownloader
