@@ -28,9 +28,8 @@ downloadFiles url = do
   doc <- fromUrl url
   hrefs <- runX $ doc >>> css "a" ! "href"
   exist <- doesDirectoryExist name
-  if not exist
-    then putStrLn $ "mkdir " ++ name
-    else return ()
+  unless exist .
+    putStrLn $ "mkdir " ++ name
   let images = map (base ++) $ filter ("img/" `isPrefixOf`) hrefs
       movies = filter (=~ "(mp4|zip)$") hrefs
   mapM_ (uncurry download) $ map (\x -> (x, imageFilename name x)) $ images ++ movies
@@ -38,9 +37,8 @@ downloadFiles url = do
 download :: Url -> FilePath -> IO ()
 download url filepath = do
   exist <- doesFileExist filepath
-  if not exist
-    then putStrLn $ "curl -# '" ++ url ++ "' -o " ++ filepath
-    else return ()
+  unless exist .
+    putStrLn $ "curl -# '" ++ url ++ "' -o " ++ filepath
 
 imageFilename :: String -> Url -> FilePath
 imageFilename name url = name ++ "/" ++ basename url
