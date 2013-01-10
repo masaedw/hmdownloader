@@ -19,7 +19,7 @@ parseTopPage = do
   let url = "http://www.himemix.com/"
   doc <- fromUrl url
   candidate <- runX $ doc >>> css ".con02 a" ! "href"
-  return $ map (url ++) $ filter ("girl/" `isPrefixOf`) candidate
+  return . map (url ++) $ filter ("girl/" `isPrefixOf`) candidate
 
 downloadFiles :: Url -> IO ()
 downloadFiles url = do
