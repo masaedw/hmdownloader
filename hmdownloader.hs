@@ -23,16 +23,16 @@ parseTopPage = do
 
 downloadFiles :: Url -> IO ()
 downloadFiles url = do
-  let base = baseurl url
-      (_, _, _, name:_) = url =~ "girl/(.+)/" :: (String,String,String,[String])
   doc <- fromUrl url
   hrefs <- runX $ doc >>> css "a" ! "href"
   exist <- doesDirectoryExist name
   unless exist .
     putStrLn $ "mkdir " ++ name
-  let images = map (base ++) $ filter ("img/" `isPrefixOf`) hrefs
+  let images = map (baseurl url ++) $ filter ("img/" `isPrefixOf`) hrefs
       movies = filter (=~ "(mp4|zip)$") hrefs
-  mapM_ (uncurry download) $ map (\x -> (x, imageFilename name x)) $ images ++ movies
+  forM_ (images ++ movies) $ \x ->
+    download x $ imageFilename name x
+    where (_, _, _, name:_) = url =~ "girl/(.+)/" :: (String,String,String,[String])
 
 download :: Url -> FilePath -> IO ()
 download url filepath = do
