@@ -56,4 +56,4 @@ runPool_ :: Int -> [IO a] -> IO ()
 runPool_ n as = do
   (input, output) <- threadPoolIO n id
   forM_ as $ writeChan input
-  sequence_ (take (length as) . repeat $ readChan output)
+  forM_ as . const $ readChan output
