@@ -13,7 +13,7 @@ main :: IO ()
 main = do
   galleries <- parseTopPage
   requests <- liftM concat . runPool 5 $ map parseGallery galleries
-  sequence_ . map download $ requests
+  mapM_ download $ requests
 
 type Url = String
 
